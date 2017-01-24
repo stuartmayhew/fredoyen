@@ -1,0 +1,33 @@
+﻿@model IEnumerable<FredOyen.Models.Talks>
+
+@{
+    ViewBag.Title = "Uploaded Talks";
+}
+
+<h2>Fred O's Uploaded Talks</h2>
+<h3>Click "Download" to download the talk or "Listen" to listen to it on your device</h3>
+
+<table class="table">
+
+@foreach(var item in Model) {
+    <tr>
+        <td>
+            @if (item == Model.First())
+            {
+                <em style="color:hotpink">NEW! </em>
+            }
+            @Html.DisplayFor(modelItem => item.Comment)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SentDate)
+        </td>
+        <td>
+            <a href="@Html.Raw(item.filePath.ToString())">Listen</a>
+        </td>
+        <td>
+            <a href="@Html.Raw(item.filePath.ToString())" download="@Html.Raw(item.filePath.ToString())">Download</a>
+        </td>
+    </tr>
+}
+
+</table>

@@ -1,0 +1,166 @@
+﻿@model FredOyen.Models.Talks
+
+<style type="text/css">
+    #dropZone {
+        background: gray;
+        border: black dashed 3px;
+        width: 200px;
+        padding: 50px;
+        text-align: center;
+        color: white;
+    }
+</style>
+
+<section>
+    <div class="container">
+        @using (Html.BeginForm("FileUpload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+
+            <div class="row">
+
+                <div class="col-md-8  col-md-offset-2">
+                    <div class="widget">
+
+                        <div class="widget-header  primary">
+                            <h3 class="widget-title"><strong>Upload</strong> Talks</h3>
+                        </div>
+
+                        <fieldset>
+                            @if (ViewBag.docURL != null)
+                            {
+                                <p><a href="@Html.Raw(ViewBag.docURL)" target="_blank">@Html.Raw(ViewBag.docURL)</a></p>
+                                    <hr />
+                            }
+                            @Html.EditorFor(m => m.sourceFile, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                            
+                        </fieldset>
+
+                        <div class="widget-block">
+
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            @Html.Label("Step 2 - Enter Subject", new { @class = "control-label" })
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            @Html.TextAreaFor(m => m.Comment, new { rows = 4, columns = 1600 })
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <div class="form-group">
+                                            @Html.CheckBox(Html.NameFor(m => m.isPaul).ToString(), true)
+                                            @Html.Label("Step 3 - Check if this is one of Paul's talks", new { @class = "control-label" })
+                                        </div>
+                                    </div>
+                                </div><!-- /.row -->
+                            </fieldset>
+
+                        </div><!-- /.widget-block -->
+
+                        <div class="widget-footer  form-submit">
+                            <button type="submit" name="Submit" id="Submit" class="btn  btn-primary">Step 4 - Upload Talk</button>
+                        </div>
+                        @if (ViewBag.Success != null)
+                        {
+                            if (ViewBag.Success == true)
+                            {
+                                <div class="alert  alert-success  alert-sm" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <i class="fa fa-check" aria-hidden="true"></i> <span class="msg"><strong>UploadSuccess!</strong> </span>
+                                </div>
+                            }
+                            else
+                            {
+                                string errorMsg = ViewBag.Error;
+                                <div class="alert  alert-danger  alert-sm" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <span class="msg"><strong>UploadFailed!</strong> @errorMsg</span>
+                                </div>
+                            }
+                        }
+
+                    </div><!-- /.widget -->
+                </div><!-- /.col -->
+
+
+                <div class="col-md-4  hidden">
+                    <div class="widget">
+
+                    </div><!-- /.widget -->
+                </div><!-- /.col -->
+
+            </div><!-- /.row -->}
+
+    </div><!-- /.container -->
+</section>
+<script type="text/javascript">
+    function ShowWait() {
+        waitingDialog.show();
+    }
+
+</script>
+<script src="~/Scripts/jquery-1.10.2.js">
+
+var waitingDialog = waitingDialog || (function ($) {
+    'use strict';
+
+	// Creating modal dialog's DOM
+	var $dialog = $(
+		'<div class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true" style="padding-top:15%; overflow-y:visible;">' + 
+        '<div class="modal-dialog modal-m">' + 
+        '<div class="modal-content">' +
+            '<div class="modal-header"><h3 style="margin:0;"></h3></div>' +
+            '<div class="modal-body">' +
+                '<div class="progress progress-striped active" style="margin-bottom:0;"><div class="progress-bar" style="width: 100%"></div></div>' +
+            '</div></div></div></div>'
+            );
+
+	return {
+		/**
+		 * Opens our dialog
+        */
+        show: function (message, options) {
+        // Assigning defaults
+        if (typeof options === 'undefined') {
+        options = {};
+        }
+        if (typeof message === 'undefined') {
+        message = 'Loading';
+        }
+        var settings = $.extend({
+        dialogSize: 'm',
+        progressType: '',
+        onHide: null // This callback runs after the dialog was hidden
+        }, options);
+
+        // Configuring dialog
+        $dialog.find('.modal-dialog').attr('class', 'modal-dialog').addClass('modal-' + settings.dialogSize);
+        $dialog.find('.progress-bar').attr('class', 'progress-bar');
+        if (settings.progressType) {
+        $dialog.find('.progress-bar').addClass('progress-bar-' + settings.progressType);
+        }
+        $dialog.find('h3').text(message);
+        // Adding callbacks
+        if (typeof settings.onHide === 'function') {
+        $dialog.off('hidden.bs.modal').on('hidden.bs.modal', function (e) {
+        settings.onHide.call($dialog);
+        });
+        }
+        // Opening dialog
+        $dialog.modal();
+        },
+        /**
+        * Closes dialog
+        */
+        hide: function () {
+        $dialog.modal('hide');
+        }
+        };
+
+        })(jQuery);
+
+</script>
+
