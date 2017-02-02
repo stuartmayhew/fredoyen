@@ -166,7 +166,7 @@ namespace FredOyen.Models
             return x;
         }
 
-        public byte[] GetScalaBytes(string sql)
+        public byte[] GetScalarBytes(string sql)
         {
             byte[] bytes = null;
             System.Data.SqlClient.SqlConnection conn3 = new System.Data.SqlClient.SqlConnection(cnStr);

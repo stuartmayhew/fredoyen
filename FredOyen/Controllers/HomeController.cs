@@ -16,37 +16,37 @@ namespace FredOyen.Controllers
         clsDataGetter dg = new clsDataGetter(ConfigurationManager.ConnectionStrings["FredOyen"].ConnectionString);
         FredOyenData db = new FredOyenData();
         private const string TempPath = @"C:\Temp";
-        public ActionResult Index(int? userID)
+        public ActionResult Index()
         {
-            bool isPaul = true;
-            bool isAA = true;
+            //bool isPaul = true;
+            //bool isAA = true;
             IEnumerable<Talks> talks = null;
-            if (userID != null)
-            {
-                SqlDataReader dr = dg.GetDataReader("SELECT * FROM Emails WHERE pKey=" + userID.ToString());
-                if (dr.Read())
-                {
-                    isPaul = (bool)dr["isPaul"];
-                    isAA = (bool)dr["isSpeaker"];
-                }
-                dg.KillReader(dr);
-                if (isPaul && isAA)
-                {
-                    talks = db.Talks.ToList().OrderByDescending(x => x.talk_id);
-                    return View("Index", talks);
-                }
-                else if (isPaul && !isAA)
-                {
-                    talks = db.Talks.Where(x => x.isPaul == true).ToList().OrderByDescending(x => x.talk_id);
-                    return View("Index", talks);
-                }
+            //if (userID != null)
+            //{
+            //    SqlDataReader dr = dg.GetDataReader("SELECT * FROM Emails WHERE pKey=" + userID.ToString());
+            //    if (dr.Read())
+            //    {
+            //        isPaul = (bool)dr["isPaul"];
+            //        isAA = (bool)dr["isSpeaker"];
+            //    }
+            //    dg.KillReader(dr);
+            //    if (isPaul && isAA)
+            //    {
+            //        talks = db.Talks.ToList().OrderByDescending(x => x.talk_id);
+            //        return View("Index", talks);
+            //    }
+            //    else if (isPaul && !isAA)
+            //    {
+            //        talks = db.Talks.Where(x => x.isPaul == true).ToList().OrderByDescending(x => x.talk_id);
+            //        return View("Index", talks);
+            //    }
 
-                else if (!isPaul && isAA)
-                {
-                    talks = db.Talks.Where(x => x.isPaul == false).ToList().OrderByDescending(x => x.talk_id);
-                    return View("Index", talks);
-                }
-            }
+            //    else if (!isPaul && isAA)
+            //    {
+            //        talks = db.Talks.Where(x => x.isPaul == false).ToList().OrderByDescending(x => x.talk_id);
+            //        return View("Index", talks);
+            //    }
+            //}
             talks = db.Talks.ToList().OrderByDescending(x => x.talk_id);
             return View("Index", talks);
         }
@@ -62,18 +62,18 @@ namespace FredOyen.Controllers
         public void TestUpload()
         {
             Talks talk = new Talks();
-            talk.sourceFile = @"D:\AATalks\AASpeakers\AA\AASpeakersAAFredOCAUnity03.mp3";
+            talk.sourceFile = @"D:\AATalks\AA\AASpeakers\VariousAASpeakersAASpeakersPamBHHRetreat2015.mp3";
 
             FileUpload(talk);
         }
         public ActionResult FileUpload(Talks talk)
         {
             System.IO.FileInfo fi = new FileInfo(talk.sourceFile);
-            talk.fileBytes = dg.GetScalaBytes("SELECT fileBytes FROM TalkFiles WHERE talkPath='" + talk.sourceFile + "'");
+            talk.fileBytes = dg.GetScalarBytes("SELECT fileBytes FROM TalkFiles WHERE talkPath='" + talk.sourceFile + "'");
             var ext = fi.Extension;
             var fileName = fi.Name;
-            fileName = fileName.Replace("-", "");
-            fileName = fileName.Replace(" ", "");
+            fileName = fileName.Replace("-", "_");
+            fileName = fileName.Replace(" ", "_");
             var basePath = Server.MapPath("~/Speakers");
             if (!Directory.Exists(basePath))
                 Directory.CreateDirectory(basePath);
